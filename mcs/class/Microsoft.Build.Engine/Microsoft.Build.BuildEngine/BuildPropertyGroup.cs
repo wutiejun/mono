@@ -181,6 +181,8 @@ namespace Microsoft.Build.BuildEngine {
 				properties.Remove (propertyToRemove);
 			} else
 				propertiesByName.Remove (propertyToRemove.Name);
+			
+			parentProject.NeedToReevaluate ();
 		}
 
 		public void RemoveProperty (string propertyName)
@@ -191,8 +193,10 @@ namespace Microsoft.Build.BuildEngine {
 						RemoveProperty (bp);
 						break;
 					}
-			} else
+			} else {
 				propertiesByName.Remove (propertyName);
+				parentProject.NeedToReevaluate ();
+			}
 		}
 
 		public void SetProperty (string propertyName,
