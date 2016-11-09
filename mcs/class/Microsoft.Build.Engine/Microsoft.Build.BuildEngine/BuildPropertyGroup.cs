@@ -182,7 +182,8 @@ namespace Microsoft.Build.BuildEngine {
 			} else
 				propertiesByName.Remove (propertyToRemove.Name);
 			
-			parentProject.NeedToReevaluate ();
+			if (IsGlobal)
+				parentProject.NeedToReevaluate ();
 		}
 
 		public void RemoveProperty (string propertyName)
@@ -195,7 +196,8 @@ namespace Microsoft.Build.BuildEngine {
 					}
 			} else {
 				propertiesByName.Remove (propertyName);
-				parentProject.NeedToReevaluate ();
+				if (IsGlobal)
+					parentProject.NeedToReevaluate ();
 			}
 		}
 
