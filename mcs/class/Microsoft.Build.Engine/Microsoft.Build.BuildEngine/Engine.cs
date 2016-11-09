@@ -307,6 +307,7 @@ namespace Microsoft.Build.BuildEngine {
 				if (globalProperties != null) {
 					GlobalProperties = engine_old_grp;
 					project.GlobalProperties = project_old_grp;
+					project.NeedToReevaluate ();
 				}
 			}
 		}
