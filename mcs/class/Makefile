@@ -372,6 +372,7 @@ DISTFILES = \
 	MicrosoftAjaxLibrary/License.htm	\
 	test-helpers/NetworkHelpers.cs	\
 	test-helpers/SocketResponder.cs	\
+	lib/$(monolite_dir)/mcs.exe   \
 	$(monolite_files)
 
 .PHONY: all-local $(STD_TARGETS:=-local)
@@ -392,7 +393,7 @@ build_files = mscorlib.dll System.dll System.Xml.dll Mono.Security.dll System.Co
 	Facades/System.Threading.Tasks.dll Facades/System.Globalization.dll Facades/System.Runtime.Extensions.dll Facades/System.Threading.dll \
 	Facades/System.IO.dll Facades/System.Runtime.InteropServices.dll Facades/System.Xml.ReaderWriter.dll Facades/System.Linq.Expressions.dll \
 	Facades/System.Runtime.Numerics.dll Facades/System.Xml.XDocument.dll Facades/System.IO.FileSystem.Primitives.dll Facades/System.IO.FileSystem.dll \
-	Facades/System.Diagnostics.FileVersionInfo.dll
+	Facades/System.Diagnostics.FileVersionInfo.dll Facades/System.Security.Cryptography.Algorithms.dll
 
 monolite_files = $(build_files:%=lib/$(monolite_dir)/%)
 
@@ -405,10 +406,14 @@ $(monolite_files): | lib/$(monolite_dir)/Facades
 $(monolite_files): lib/$(monolite_dir)/%: lib/build/%
 	cp -p $< $@
 
+lib/$(monolite_dir)/mcs.exe:
+	$(MAKE) -C ../mcs PROFILE=basic
+	cp -p lib/basic/mcs.exe lib/$(monolite_dir)
+
 $(build_files:%=lib/build/%):
 	cd $(topdir) && $(MAKE) profile-do--build--all NO_DIR_CHECK=1 SKIP_AOT=1
 
-dist-monolite: $(monolite_files)
+dist-monolite: $(monolite_files) lib/$(monolite_dir)/mcs.exe
 
 dist-default: dist-monolite
 

@@ -1063,11 +1063,6 @@ if test "x$mono_feature_disable_attach" = "xyes"; then
 	AC_MSG_NOTICE([Disabled agent attach])
 fi
 
-if test "x$mono_feature_disable_full_messages" = "xyes"; then
-	AC_DEFINE(DISABLE_FULL_MESSAGES, 1, [Disables building in the full table of WAPI messages])
-	AC_MSG_NOTICE([Disabled full messages for Win32 errors, only core message strings shipped])
-fi
-
 if test "x$mono_feature_disable_verifier" = "xyes"; then
 	AC_DEFINE(DISABLE_VERIFIER, 1, [Disables the verifier])
 	AC_MSG_NOTICE([Disabled the metadata and IL verifiers])
@@ -1409,7 +1404,15 @@ if test x$host_win32 = xno; then
 		# We have the new, three-parameter version
 		AC_MSG_RESULT(no)
 	])
-
+	AC_TRY_COMPILE([#include <sched.h>], [
+	     CPU_COUNT((void *) 0);
+	], [
+		AC_MSG_RESULT(yes)
+		AC_DEFINE(GLIBC_HAS_CPU_COUNT, 1, [GLIBC has CPU_COUNT macro in sched.h])
+	], [
+		# We have the new, three-parameter version
+		AC_MSG_RESULT(no)
+	])
 
 	dnl ******************************************************************
 	dnl *** Check for large file support                               ***
